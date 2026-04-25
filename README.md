@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Landing de Captura de Leads
 
-## Getting Started
+Landing page construida con Next.js para capturar leads desde un formulario y enviarlos a una API externa (por ejemplo, Laravel).
 
-First, run the development server:
+## Funcionalidades
+
+- Secciones de landing: navbar, hero, precios, contacto y footer.
+- Formulario de contacto con validacion en cliente usando Yup.
+- Envio de datos por `fetch` a la URL configurada en entorno.
+- Estados de UI: errores por campo, loading y modal de exito.
+
+## Requisitos
+
+- Node.js 18 o superior.
+- npm.
+
+## Instalacion
+
+1. Entrar al proyecto.
+
+```bash
+cd landing-code
+```
+
+2. Instalar dependencias.
+
+```bash
+npm install
+```
+
+3. Crear el archivo `.env.local` en la raiz del proyecto y configurar la URL destino del POST.
+
+```env
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api/leads
+```
+
+Importante: el formulario hace `POST` directamente a `NEXT_PUBLIC_API_URL`.
+
+## Ejecutar en desarrollo
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Aplicacion disponible en `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Payload enviado
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```json
+{
+  "nombre": "Juan Perez",
+  "correo": "juan@email.com",
+  "telefono": "555-1234",
+  "company": "Mi Empresa",
+  "mensaje": "Estoy interesado"
+}
+```
 
-## Learn More
+## Validaciones del formulario
 
-To learn more about Next.js, take a look at the following resources:
+- `nombre`: requerido.
+- `correo`: requerido y formato email valido.
+- `telefono`: requerido.
+- `company`: opcional.
+- `mensaje`: opcional.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Flujo del formulario
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. El usuario completa y envia el formulario.
+2. Se valida el payload con Yup (`abortEarly: false`).
+3. Se ejecuta la peticion `POST` a `NEXT_PUBLIC_API_URL`.
+4. Si la respuesta es correcta, se limpia el formulario y se muestra mensaje/modal de exito.
+5. Si falla, se muestran errores de validacion o error general.
 
-## Deploy on Vercel
+## Estructura actual del proyecto
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```txt
+app/
+  globals.css
+  layout.tsx
+  page.tsx
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+components/
+  Contact.tsx
+  Footer.tsx
+  Hero.tsx
+  Navbar.tsx
+  Pricing.tsx
+
+public/
+  leads.csv
+```
+
+## Scripts disponibles
+
+```bash
+npm run dev    # Desarrollo
+npm run build  # Build de produccion
+npm run start  # Servidor en produccion
+npm run lint   # Lint con ESLint
+```
+
+## Stack
+
+- Next.js 16 (App Router)
+- React 19
+- Tailwind CSS 4
+- Yup
+
+## Notas
+
+- Verifica que el backend permita CORS desde el frontend.
+- Si cambias la ruta del endpoint, actualiza `NEXT_PUBLIC_API_URL`.
+- El formulario de contacto esta implementado en `components/Contact.tsx`.
